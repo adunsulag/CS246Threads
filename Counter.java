@@ -6,10 +6,13 @@
 public class Counter implements Runnable{
   
   private Thread counter;
-  private CountObj countValue = null;
+  private boolean isOdd;
+  private ThreadCounter threadCounter;
   
-  public Counter(CountObj countValue) {
-    this.countValue = countValue;
+  public Counter(boolean isOdd, ThreadCounter threadCounter) {
+    this.isOdd = isOdd;
+    this.threadCounter = threadCounter;
+    threadCounter.increment();
   }
   
   public void start() {
@@ -21,14 +24,26 @@ public class Counter implements Runnable{
     counter = null;
   }
 
+  private void sleepAndPrint(int i) {
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException ex) {
+        }
+        System.out.println(i);
+  }
   public void run() {
+
     Thread currentThread = Thread.currentThread();
-    while(counter == currentThread && countValue.getValue() <= 100) {
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException ex) {
+    if (this.isOdd) {
+      for (int o = 1; counter == currentThread && o <= 100; o+= 2) {
+        sleepAndPrint(o);
       }
-      countValue.printAndIncrement();
+    } else {
+      for (int e = 2; counter == currentThread && e <= 100; e+= 2) {
+        sleepAndPrint(e);
+      }
     }
+
+    threadCounter.decrementAndCheckCompletion();
   }
 }

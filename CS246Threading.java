@@ -1,10 +1,10 @@
 public class CS246Threading
 {
   public static void main(String[] args) {
-     CountObj obj = new CountObj();
-     Counter counterOdd = new Counter(obj);
-     Counter counterEven = new Counter(obj);
-     counterEven.start();
+     ThreadCounter threadCounter = new ThreadCounter();
+     Counter counterOdd = new Counter(true, threadCounter);
+     Counter counterEven = new Counter(false, threadCounter);
      counterOdd.start();
+     counterEven.start();
   }
 }
